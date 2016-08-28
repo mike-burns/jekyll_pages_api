@@ -24,6 +24,12 @@ describe "integration" do
     entries_data.find{|page| page['url'] == url }
   end
 
+  def specific_page(path)
+    file_path = File.join(BUILD_DIR, '_site', path)
+    contents = File.read(file_path)
+    JSON.parse(contents)
+  end
+
   def homepage_data
     page_data('/')
   end
@@ -101,5 +107,10 @@ describe "integration" do
     expect(page['skip_index']).to eq(true)
     page = page_data('/unicode.html')
     expect(page['skip_index']).to eq(nil)
+  end
+
+  it "produces a JSON output for each page" do
+    page = specific_page("/about.json")
+    expect(page['tags']).to eq(["Jekyll", "test page", "convenient"])
   end
 end

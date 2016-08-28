@@ -43,6 +43,18 @@ module JekyllPagesApi
 
     def generate
       self.site.pages << self.page
+
+      self.site.each_site_file do |site_file|
+        page = Page.new(site_file, @site)
+        p site_file
+        p @site
+        p site_file.path
+        jekyll_page = PageWithoutAFile.new(
+          site_file, @site, '', site_file.destination(''))
+        jekyll_page.output = page.to_json
+
+        self.site.pages << jekyll_page
+      end
     end
   end
 end
